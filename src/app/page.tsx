@@ -1,10 +1,11 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import localFont from "next/font/local";
 import CenterGrid from "./components/CenterGrid";
+import UnsupportedScreen from "./components/UnsupportedScreen";
 import {Color,Framework,Iconography,Imagery,Logo,Motion,Typography,VoiceAndTone,} from "./components/Logos";
 
 const secondary = localFont({
@@ -12,6 +13,7 @@ const secondary = localFont({
 });
 
 export default function Home() {
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -234,6 +236,18 @@ export default function Home() {
         "<"
       );
   }, []);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // Customize breakpoint as needed
+    };
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  if (isMobile) return <UnsupportedScreen />;
 
   return (
     <div
